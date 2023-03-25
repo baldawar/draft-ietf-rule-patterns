@@ -19,11 +19,11 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Patterns - Event Pattern Matching Language: Flexible event matching through rules"
+abbrev: "Patterns"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-etf-patterns-protocol-latest
 submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
 number:
 date:

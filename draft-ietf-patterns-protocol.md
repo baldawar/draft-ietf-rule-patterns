@@ -25,7 +25,7 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
+    fullname: Rishi Baldawa
     organization: Your Organization Here
     email: "baldawar@amazon.com"
 

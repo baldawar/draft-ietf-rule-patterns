@@ -26,7 +26,7 @@ venue:
 author:
  -
     fullname: Rishi Baldawa
-    organization: Your Organization Here
+    organization: TBC
     email: "baldawar@amazon.com"
 
 normative:
@@ -36,14 +36,12 @@ informative:
 
 --- abstract
 
-TODO Abstract
-
-
+This RFC describes patterns as supported within a matching library. 
 --- middle
 
 # Introduction
 
-TODO Introduction
+The patterns provides a way to query JSON documents as described in [RFC 8259](https://www.rfc-editor.org/rfc/rfc8259.html). The patterns are defined using a simple JSON syntax to make it easy to read, write, and manipulate such that they can be prefered over ad-hoc parsing and manipulation of code for further operations such as filtering, selection, and transfomring of data based on specific patterns. Additionally, This document describes the syntax and semantics of the patterns, along with examples of how they can be used in practice. Finally, the document provides guidelines for creating new patterns that conform to the existing syntax and semantics. Overall, this RFC aims to guide the functionality of the JSON-based library by providing a powerful pattern matching capability that enables users to work with JSON data in a more flexible and intuitive way.
 
 
 # Conventions and Definitions

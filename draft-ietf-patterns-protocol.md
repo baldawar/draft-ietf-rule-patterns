@@ -36,7 +36,7 @@ informative:
 
 --- abstract
 
-This RFC describes patterns as supported within a matching library. 
+This RFC describes patterns as supported within a matching library.
 --- middle
 
 # Introduction

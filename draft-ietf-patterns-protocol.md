@@ -36,7 +36,8 @@ informative:
 
 --- abstract
 
-This RFC describes patterns as supported within a matching library.
+This document describes patterns as supported within a matching libraries with the goal standardizing querying fields within data objects through an easy to express query language across many different libraries.
+
 --- middle
 
 # Introduction

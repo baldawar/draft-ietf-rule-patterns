@@ -38,6 +38,10 @@ informative:
 
 This document describes patterns as supported within a matching libraries with the goal standardizing querying fields within data objects through an easy to express query language across many different libraries.
 
+# About This Document
+
+This is a work in progress. It is not ready for consumption or reference. Prior art can be found at https://github.com/timbray/quamina/blob/main/PATTERNS.md 
+
 --- middle
 
 Introduction        {#intro}

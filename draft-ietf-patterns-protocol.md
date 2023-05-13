@@ -40,7 +40,7 @@ This document describes patterns as supported within a matching libraries with t
 
 # About This Document
 
-This is a work in progress. It is not ready for consumption or reference. Prior art can be found at https://github.com/timbray/quamina/blob/main/PATTERNS.md 
+This is a work in progress. It is not ready for consumption or reference. Prior art can be found at https://github.com/timbray/quamina/blob/main/PATTERNS.md.
 
 --- middle
 
@@ -70,4 +70,4 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge [Quamina](https://github.com/timbray/quamina) and [Ruler](https://github.com/aws/event-ruler)
+TODO acknowledge [Quamina](https://github.com/timbray/quamina) and [Ruler](https://github.com/aws/event-ruler).

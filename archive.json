@@ -1,0 +1,164 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-05-16T00:26:45.570414+00:00",
+  "repo": "epml-spec/draft-ietf-patterns-protocol",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOJOPpnM5jyof4",
+      "title": "Start the specification",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/1",
+      "state": "OPEN",
+      "author": "baldawar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "baldawar"
+      ],
+      "labels": [],
+      "body": "Complete the intial steps as suggested in https://github.com/timbray/quamina/issues/210. https://github.com/timbray/quamina/blob/main/PATTERNS.md as the base. Ideally we want to keep the spec in sync with [ruler](https://github.com/aws/event-ruler). \r\n\r\nAll changes need to be made withinhttps://github.com/epml-spec/draft-ietf-patterns-protocol/edit/main/draft-ietf-patterns-protocol.md \r\n\r\nThis has steps on how to get the build working https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md",
+      "createdAt": "2023-04-19T05:53:25Z",
+      "updatedAt": "2023-04-19T05:53:34Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOJOPpnM5jyrEV",
+      "title": "Wildcard vs Shell-style",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/2",
+      "state": "OPEN",
+      "author": "baldawar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Quamina uses shell-style pattern https://github.com/timbray/quamina/blob/main/PATTERNS.md#shellstyle-pattern to match single wildcard characters. Event Ruler on the other hand went with the term `wildcard` and allows any number of them https://github.com/aws/event-ruler#wildcard-matching. \r\n\r\nLeave this issue open to discuss if 1/ do we have an issue here, 2/ if so, any need to converge in the spec, or 3/ allow spec to be lenient in how matchers are defined.  ",
+      "createdAt": "2023-04-19T06:04:08Z",
+      "updatedAt": "2023-04-19T16:07:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "timbray",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Quamina's shell-style is a stopgap because I hadn't figured out a good implementation for general-purpose wildcard. My intent is to be as compatible as possible with Ruler in the long-term.  So, /2",
+          "createdAt": "2023-04-19T16:07:01Z",
+          "updatedAt": "2023-04-19T16:07:01Z"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOJOPpnM5j8eee",
+      "title": "Rename Repo To Match Naming Guidelines",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/3",
+      "state": "OPEN",
+      "author": "baldawar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In the classic case of \"should have read the docs first\", as I started writing parts of the spec found out that our naming isn't conforming to the naming guidelines as shown in https://authors.ietf.org/en/naming-your-internet-draft. While I'll take care of the mentions within the markdown file; some parts of the doc get generated automatically based on the Repo Name / github-page link. So we would need to rename the pkg in future. I'd rather stay focused on https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/1 at the moment, so I've created this issue is to ensure we don't loose track of this change later. ",
+      "createdAt": "2023-04-20T14:03:40Z",
+      "updatedAt": "2023-04-20T14:03:40Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOJOPpnM5kI9zA",
+      "title": "Extended value patterns inventory",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/4",
+      "state": "OPEN",
+      "author": "jsmorph",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Here's an initial attempt at an inventory of various \"extended\" pattern matching capabilities. Look about right?\r\n\r\n| Extended pattern type     | Notes                            | Implementations |\r\n| -----                     | -----                            | ----------      |\r\n| string equality  |                                  | EB, ER, Q       |\r\n| number equality  | Representation challenges        | EB, ER, Q       |\r\n| Boolean equality |                                  | EB, ER, Q       |\r\n| `anything-but`            |                                  | EB, ER, Q       |\r\n| `exists`                  |                                  | EB, ER, Q       |\r\n| `shellstyle`              |                                  | Q               |\r\n| `prefix`                  |                                  | EB, ER, Q       |\r\n| `suffix`                  | Via `shellstyle` in Q            | EB, ER          |\r\n| `wildcard`                | Multiple `*` supported in EB, ER | EB, ER          |\r\n| `cidr`                    |                                  | EB, ER          |\r\n| \"normal\" `$or`            |                                  | EB, ER          |\r\n| \"parallel\" `$or`          |                                  | EB, ER          |\r\n| `numeric` inequalities    |                                  | EB, ER          |\r\n| `numeric` equality        |                                  | EB, ER          |\r\n\r\n\r\nI broke out some types (like `numeric` and implicit equals) perhaps unnecessarily.\r\n\r\n# References\r\n\r\n1. [EB: EventBridge docs](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html#eb-create-pattern)\r\n1. [Q: Quamina patterns](https://github.com/timbray/quamina/blob/main/PATTERNS.md)\r\n1. [ER: Event Ruler](https://github.com/aws/event-ruler#readme)\r\n",
+      "createdAt": "2023-04-23T15:49:07Z",
+      "updatedAt": "2023-05-03T15:32:33Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "baldawar",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Couple of comments\r\n* Suffix via shell-style shouldn't count since there's already shell-style row. \r\n* EventBridge  doesn't support wildcards yet. \r\n\r\n\r\n\r\nAlso, there are some additional reserved pattern names that can be included here as not supported by any https://github.com/aws/event-ruler/blob/main/src/main/software/amazon/event/ruler/Constants.java#L44. \r\n",
+          "createdAt": "2023-05-03T15:31:40Z",
+          "updatedAt": "2023-05-03T15:32:33Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 5,
+      "id": "PR_kwDOJOPpnM5QArAj",
+      "title": "Add abstract + intro for draft patterns protocol",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/pull/5",
+      "state": "CLOSED",
+      "author": "baldawar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Following https://authors.ietf.org/en/required-content as guidance. Went the wrong way earlier this month, so start small this time and submitting PRs in pieces.",
+      "createdAt": "2023-05-08T15:10:09Z",
+      "updatedAt": "2023-05-14T16:22:07Z",
+      "baseRepository": "epml-spec/draft-ietf-patterns-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "106e1ebe30f8827b04f48aaedd40581fb8397e6a",
+      "headRepository": "baldawar/draft-ietf-patterns-protocol",
+      "headRefName": "main",
+      "headRefOid": "9489db37c4618c4e3171b11f69578bf9bae62293",
+      "closedAt": "2023-05-14T16:22:07Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}

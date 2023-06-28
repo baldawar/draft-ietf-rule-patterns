@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Patterns - Event Pattern Matching Language: Flexible event matching through rules</title>
+<meta content="Someone" name="author">
+<meta content="
+       This document describes patterns as supported within a matching libraries with the goal standardizing querying fields within data objects through an easy to express query language across many different libraries; promoting interoperability, predictability, and expectations for future changes to improve developer experience. 
+       NOTE : This is a work in progress. It is not ready for consumption or reference. Prior art can be found at  Quamina Patterns.md . 
+    " name="description">
+<meta content="xml2rfc 3.17.3" name="generator">
+<meta content="next generation" name="keyword">
+<meta content="unicorn" name="keyword">
+<meta content="sparkling distributed ledger" name="keyword">
+<meta content="draft-ietf-patterns-protocol-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.17.3
+    Python 3.11.4
+    appdirs 1.4.4
+    ConfigArgParse 1.5.3
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.2
+    pycountry 22.3.5
+    PyYAML 6.0
+    requests 2.31.0
+    setuptools 67.7.2
+    six 1.16.0
+    wcwidth 0.2.6
+-->
+<link href="draft-ietf-patterns-protocol.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Patterns</td>
+<td class="right">June 2023</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Someone</td>
+<td class="center">Expires 30 December 2023</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-patterns-protocol-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2023-06-28" class="published">28 June 2023</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2023-12-30">30 December 2023</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">Someone</div>
+<div class="org">SomeOrg</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Patterns - Event Pattern Matching Language: Flexible event matching through rules</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document describes patterns as supported within a matching libraries with the goal standardizing querying fields within data objects through an easy to express query language across many different libraries; promoting interoperability, predictability, and expectations for future changes to improve developer experience.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2"><strong>NOTE</strong>: This is a work in progress. It is not ready for consumption or reference. Prior art can be found at <a href="https://github.com/timbray/quamina/blob/main/PATTERNS.md">Quamina Patterns.md</a>.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://epml-spec.github.io/draft-ietf-patterns-protocol/draft-ietf-patterns-protocol.html">https://epml-spec.github.io/draft-ietf-patterns-protocol/draft-ietf-patterns-protocol.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-patterns-protocol/">https://datatracker.ietf.org/doc/draft-ietf-patterns-protocol/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/epml-spec/draft-ietf-patterns-protocol">https://github.com/epml-spec/draft-ietf-patterns-protocol</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 30 December 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2023 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-current-state" class="internal xref">Current State</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-need-for-standardization" class="internal xref">Need for Standardization</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-scope" class="internal xref">Scope</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.4">
+                <p id="section-toc.1-1.1.2.4.1"><a href="#section-1.4" class="auto internal xref">1.4</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.5">
+                <p id="section-toc.1-1.1.2.5.1"><a href="#section-1.5" class="auto internal xref">1.5</a>.  <a href="#name-document-structure" class="internal xref">Document Structure</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-patterns" class="internal xref">Patterns</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-syntax-and-semantics" class="internal xref">Syntax and Semantics</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-field-matching-and-path-spe" class="internal xref">Field Matching and Path Specification</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-extended-patterns" class="internal xref">Extended Patterns</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-prefix-pattern" class="internal xref">Prefix Pattern</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-suffix-pattern" class="internal xref">Suffix Pattern</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-wildcard-pattern" class="internal xref">Wildcard Pattern</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-exists-pattern" class="internal xref">Exists Pattern</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-cidr-matching" class="internal xref">CIDR Matching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-numeric-matching" class="internal xref">Numeric Matching</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-complex-matching-patterns" class="internal xref">Complex Matching Patterns</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-and-matching" class="internal xref">And Matching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-or-matching" class="internal xref">Or Matching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-matching-anything-but" class="internal xref">Matching Anything But</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-nesting" class="internal xref">Nesting</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-field-matching-and-path-spec" class="internal xref">Field Matching and Path Specification</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-numeric-matching-and-cidr-m" class="internal xref">Numeric Matching and CIDR Matching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-complex-matching-with-anyth" class="internal xref">Complex Matching with Anything-But and $or</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-7-use-cases" class="internal xref">7 Use Cases</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="intro">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Event matching libraries are software components that enable developers to perform advanced querying and filtering operations on data structures in real-time. These libraries provide powerful mechanisms to then search, extract, and manipulate specific information within complex data objects. They are commonly used in a variety of domains, including data processing, event-driven systems, and data integration.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<div id="current-state">
+<section id="section-1.1">
+        <h3 id="name-current-state">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-current-state" class="section-name selfRef">Current State</a>
+        </h3>
+<p id="section-1.1-1">At present <span>[<a href="#Quamina" class="cite xref">Quamina</a>]</span> and <span>[<a href="#Ruler" class="cite xref">Ruler</a>]</span> are two known examples that are optimized for fast processing. While both has similar origins, they were built independently and have gaps in features supported. Quamina exclusively supports shell-style matching while Event-Ruler does the same for CIDR and Numeric matching. Event Ruler also has <a href="https://github.com/aws/event-ruler/blob/main/src/main/software/amazon/event/ruler/Constants.java">reserved keywords</a> for future matchers against regular-expressions, dates, and strings isn't the case for Quamina.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="need-for-standardization">
+<section id="section-1.2">
+        <h3 id="name-need-for-standardization">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-need-for-standardization" class="section-name selfRef">Need for Standardization</a>
+        </h3>
+<p id="section-1.2-1">While more work is necessary to identify additional libraries with similar intent, the current landsacpe is expected to be a fragmented across different libraries and langauges. With no guide for standardization, each library organically introduced its own syntax and semantics for specifying field queries, leading to inconsistencies and limited interoperability between libraries.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">This poses several challenges. Developers often need to learn and adapt to different query languages when switching between libraries, increasing development effort and creating a barrier to entry. Furthermore, the lack of interoperability hampers collaboration and limits the reusability of code across different matching libraries such as common test and benchmarking framework.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">To address these challenges, there is a clear need for a standardized query language for field querying in matching libraries.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="scope">
+<section id="section-1.3">
+        <h3 id="name-scope">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
+        </h3>
+<p id="section-1.3-1">The document's primary goal is to define a common syntax and semantics for patterns used in matching libraries. By establishing a shared understanding of how fields are queried, developers can write portable and reusable code across different libraries. Additionally, this standardization aims to foster collaboration, simplify integration, and enhance the overall ecosystem of matching libraries.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">This document focuses on patterns used for querying fields within data objects, with an emphasis on JSON as described in <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>. While other querying mechanisms (such as regular expressions and SQL) and formats (such as Avro and Ion) exists, this standardization effort specifically addresses patterns expressed in JSON syntax and leaves others for future revisions.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-1.4">
+        <h3 id="name-conventions-and-definitions">
+<a href="#section-1.4" class="section-number selfRef">1.4. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+        </h3>
+<p id="section-1.4-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
+<p id="section-1.4-2">The terminology used in this document follows the definitions specified in <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span> for JSON constructs. Additionally, specific terms introduced within the context of patterns and matching libraries will be defined as they arise.<a href="#section-1.4-2" class="pilcrow">¶</a></p>
+<p id="section-1.4-3">Throughout the document, examples will be provided to illustrate pattern syntax and usage. These examples are not normative and serve only to aid comprehension.<a href="#section-1.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="document-structure">
+<section id="section-1.5">
+        <h3 id="name-document-structure">
+<a href="#section-1.5" class="section-number selfRef">1.5. </a><a href="#name-document-structure" class="section-name selfRef">Document Structure</a>
+        </h3>
+<p id="section-1.5-1">The remainder of this document is organized as follows: Section 2 provides background information on matching libraries and the need for standardization. Section 3 introduces the concept of patterns and their role in matching libraries. Sections 4 to 9 discuss various aspects of patterns, including extended patterns, standardization approach, implementation guidelines, and security considerations. Finally, the document concludes with acknowledgments, references, and any relevant appendices.<a href="#section-1.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="patterns">
+<section id="section-2">
+      <h2 id="name-patterns">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-patterns" class="section-name selfRef">Patterns</a>
+      </h2>
+<p id="section-2-1">A pattern in the context of matching libraries is a query expression used to identify and match specific fields within data objects. A field represents a specific value within a data object, identified by its path from the root of the object. Patterns provides a concise and expressive way to specify the desired criteria for field matching. Patterns <span class="bcp14">MAY</span> be applied to various types of data structures, but this document primarily focuses on JSON-based patterns.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div id="syntax-and-semantics">
+<section id="section-2.1">
+        <h3 id="name-syntax-and-semantics">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-syntax-and-semantics" class="section-name selfRef">Syntax and Semantics</a>
+        </h3>
+<p id="section-2.1-1">Patterns are expressed as JSON objects, conforming to the syntax defined in <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>. The syntax allows for the composition of complex patterns by combining objects, arrays, strings, numbers, and boolean values. Leaf values in a pattern must be enclosed within arrays.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">The semantics of patterns dictate how they are evaluated and matched against fields in data objects. A pattern must contain an exact path specification, represented as a list of strings, leading to a leaf value in the target object. The leaf value <span class="bcp14">MAY</span> be either a direct match or an extended pattern, which further refines the matching criteria.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="field-matching-and-path-specification">
+<section id="section-2.2">
+        <h3 id="name-field-matching-and-path-spe">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-field-matching-and-path-spe" class="section-name selfRef">Field Matching and Path Specification</a>
+        </h3>
+<p id="section-2.2-1">Field matching involves comparing the values of fields in data objects with the patterns defined. Each field consists of a leaf value and a path, which is a sequence of strings representing the hierarchy of field names leading to the leaf value from the root of the object.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">Path specifications in patterns omit arrays, focusing solely on the field names. By matching the path and comparing the leaf value of a field, patterns determine whether a field in a data object satisfies the specified criteria.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<p id="section-2.2-3">Consider the following pattern:<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.2-4">
+<pre>
+{"alpha": {"beta": [ 1 ]}}
+</pre><a href="#section-2.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-2.2-5">In this pattern, "alpha" is the field name, "beta" is the subfield name that defines the path as "alpha.beta", and [1] is the leaf value. This pattern would match an event object with the field structure:<a href="#section-2.2-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.2-6">
+<pre>
+{"alpha": {"beta": 1}}
+</pre><a href="#section-2.2-6" class="pilcrow">¶</a>
+</div>
+<p id="section-2.2-7">It would also match a pattern where event object was wrapped within an array structure:<a href="#section-2.2-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.2-8">
+<pre>
+{"alpha":  [ {"beta": 1} , {"beta": 2}, {"gamma": false} ]}
+</pre><a href="#section-2.2-8" class="pilcrow">¶</a>
+</div>
+<p id="section-2.2-9">Patterns <span class="bcp14">MAY</span> also directly specify the path that needs to be travelled for simplicity as shown in the following pattern:<a href="#section-2.2-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2.2-10">
+<pre>
+{"alpha.beta": [ 1 ]}
+</pre><a href="#section-2.2-10" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="extended-patterns">
+<section id="section-3">
+      <h2 id="name-extended-patterns">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-extended-patterns" class="section-name selfRef">Extended Patterns</a>
+      </h2>
+<p id="section-3-1">This section describes several types of extended patterns commonly supported by matching libraries, including prefix, suffix, exists, anything-but, CIDR, and wildcard patterns. Extended patterns expand the capabilities of basic patterns by introducing additional types of matching criteria. These criteria allow for more flexible and expressive field querying within data objects. Extended patterns are represented as JSON objects with a designated field called the "Pattern Type" that specifies the type of extended pattern being used. Each pattern type has its own syntax and semantics for specifying matching conditions.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Libraries <span class="bcp14">MAY</span> implement additional extendend patterns such as "shell-style" that are outside of the current spe but could be included in future revisions.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div id="prefix-pattern">
+<section id="section-3.1">
+        <h3 id="name-prefix-pattern">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-prefix-pattern" class="section-name selfRef">Prefix Pattern</a>
+        </h3>
+<p id="section-3.1-1">The prefix pattern allows developers to match fields based on a prefix string. It is useful when partial matching or searching for fields with a common prefix is desired. The pattern type for the prefix pattern is "prefix" and its value is a string representing the desired prefix.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">Example:<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">Consider the following event:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-4">
+<pre>
+{"name": "John Doe"}
+</pre><a href="#section-3.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-5">A prefix pattern to match the "name" field with a prefix of "John" would be:<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-6">
+<pre>
+{"name": {"prefix": "John"}}
+</pre><a href="#section-3.1-6" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-7">This pattern would successfully match the event because the field value "John Doe" has a prefix of "John."<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="suffix-pattern">
+<section id="section-3.2">
+        <h3 id="name-suffix-pattern">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-suffix-pattern" class="section-name selfRef">Suffix Pattern</a>
+        </h3>
+<p id="section-3.2-1">The suffix pattern matches fields whose values have a specific suffix. The "Pattern Type" for a suffix pattern is set to "suffix", and its value is a string representing the desired suffix.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">Example:
+Consider the following event:<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-3">
+<pre>
+{"email": "johndoe@example.com"}
+</pre><a href="#section-3.2-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2-4">To match fields where the value ends with "@example.com", the suffix pattern would be:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-5">
+<pre>
+{"email": {"suffix": "@example.com"}}
+</pre><a href="#section-3.2-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2-6">This pattern would match the example event, as the field "email" has a value that ends with the suffix "@example.com".<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="wildcard-pattern">
+<section id="section-3.3">
+        <h3 id="name-wildcard-pattern">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-wildcard-pattern" class="section-name selfRef">Wildcard Pattern</a>
+        </h3>
+<p id="section-3.3-1">The wildcard pattern matches fields using wildcard characters for partial matches. The "Pattern Type" for a wildcard pattern is set to "wildcard", and its value is a string containing wildcard characters. Wildcard characters <span class="bcp14">MAY</span> stand in for any number of characters inluding zero characters.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">Example:
+Consider the following event:<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-3">
+<pre>
+{"file": "document.txt"}
+</pre><a href="#section-3.3-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-4">To match fields where the value matches the wildcard pattern "docent", the wildcard pattern would be:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-5">
+<pre>
+{"file": {"wildcard": "doc*ent*"}}
+</pre><a href="#section-3.3-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-6">This pattern would match the example event, as the field "file" matches the wildcard pattern.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">To match the asterisk character specifically, a wildcard character <span class="bcp14">SHOULD</span> be escaped with a backslash. Two consecutive backslashes, that is a backslash escaped with a backslash, represents the actual backslash character. A backslash escaping any character other than asterisk or backslash is not allowed.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="exists-pattern">
+<section id="section-3.4">
+        <h3 id="name-exists-pattern">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-exists-pattern" class="section-name selfRef">Exists Pattern</a>
+        </h3>
+<p id="section-3.4-1">The exists pattern matches fields based on their existence or non-existence. The "Pattern Type" for an exists pattern is set to "exists", and its value is a boolean indicating whether the field should exist or not.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">Example:
+Consider the following event:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-3">
+<pre>
+{"name": "John Doe"}
+</pre><a href="#section-3.4-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-4">To match fields where the field "name" exists, the exists pattern would be:<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-5">
+<pre>
+{"name": {"exists": true}}
+</pre><a href="#section-3.4-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-6">This pattern would match the example event, as the field "name" exists. Conversely, to match fields where the field "age" does not exist, the exists pattern would be:<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-7">
+<pre>
+{"age": {"exists": false}}
+</pre><a href="#section-3.4-7" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-8">This pattern would also match the example event, as the field "age" does not exist.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cidr-matching">
+<section id="section-3.5">
+        <h3 id="name-cidr-matching">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-cidr-matching" class="section-name selfRef">CIDR Matching</a>
+        </h3>
+<p id="section-3.5-1">The CIDR matching allows for matching IPv4 and IPv6 address ranges. The "Pattern Type" for an exists pattern is set to "cidr", and its value is a CIDR notation as described within <span>[<a href="#RFC4632" class="cite xref">RFC4632</a>]</span>.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">Example:
+Consider the following event:<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5-3">
+<pre>
+{"ip": "192.0.2.1"}
+</pre><a href="#section-3.5-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.5-4">To match fields where the value is within the CIDR range "192.0.2.0/24", the CIDR pattern would be:<a href="#section-3.5-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.5-5">
+<pre>
+{"ip": {"cidr": "192.0.2.0/24"}}
+</pre><a href="#section-3.5-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.5-6">This pattern would match the example event, as the field "ip" falls within the specified CIDR range.<a href="#section-3.5-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="numeric-matching">
+<section id="section-3.6">
+        <h3 id="name-numeric-matching">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-numeric-matching" class="section-name selfRef">Numeric Matching</a>
+        </h3>
+<p id="section-3.6-1">Numeric matching patterns allow for specifying conditions based on JSON number values. Numeric matching is works for values between -5.0e9 and +5.0e9 inclusive, with 15 digits of precision or six digits to the right of the decimal point. Numeric values outside this range <span class="bcp14">MAY</span> not be supported for matching.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">The following example demonstrates numeric matching for an event pattern that matches events based on numeric conditions for multiple fields:<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6-3">
+<pre>
+{
+  "detail": {
+    "c-count": [ { "numeric": [ "&gt;", 0, "&lt;=", 5 ] } ],
+    "d-count": [ { "numeric": [ "&lt;", 10 ] } ],
+    "x-limit": [ { "numeric": [ "=", 3.018e2 ] } ]
+  }
+}
+</pre><a href="#section-3.6-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.6-4">In this pattern, the following conditions are specified for the respective fields:<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.6-5.1">The "detail.c-count" field should have a numeric value greater than 0 and less than or equal to 5.<a href="#section-3.6-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.6-5.2">The "detail.d-count" field should have a numeric value less than 10.<a href="#section-3.6-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.6-5.3">The "detail.x-limit" field should have a numeric value equal to 3.018e2.<a href="#section-3.6-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-3.6-6">It will match following event<a href="#section-3.6-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.6-7">
+<pre>
+{
+  "detail": {
+    "c-count": 3,
+    "d-count": 5,
+    "x-limit": 301.8
+  }
+}
+</pre><a href="#section-3.6-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="complex-matching-patterns">
+<section id="section-4">
+      <h2 id="name-complex-matching-patterns">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-complex-matching-patterns" class="section-name selfRef">Complex Matching Patterns</a>
+      </h2>
+<p id="section-4-1">This section describes examples of complex matching patterns and their usage. Complex matching patterns allow for creation more sophisticated event patterns. They <span class="bcp14">MAY</span> allow for multiple rules to be combined for logical operations. They also support nesting for matching against a complex but singular criteria for a part of an event. These patterns provide increased flexibility and granularity in specifying the conditions under which an event should be matched.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="and-matching">
+<section id="section-4.1">
+        <h3 id="name-and-matching">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-and-matching" class="section-name selfRef">And Matching</a>
+        </h3>
+<p id="section-4.1-1">When multiple multiple patterns are specified together, this effectively acts as logical and operator. This mean the aggregate complex pattern will only be a match if all rules within the pattern match.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Consider the following example rule:<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-3">
+<pre>
+{
+  "time": [ { "prefix": "2017-10-02" } ],
+  "detail": {
+    "state": [ { "anything-but": "initializing" } ],
+    "c-count": [ { "numeric": [ "&gt;", 0, "&lt;=", 5 ] } ],
+    "d-count": [ { "numeric": [ "&lt;", 10 ] } ],
+    "x-limit": [ { "anything-but": [ 100, 200, 300 ] } ]
+  }
+}
+</pre><a href="#section-4.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-4">This pattern specifies the following matching rules for different fields:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-5.1">The "time" field should have a prefix of "2017-10-02".<a href="#section-4.1-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.1-5.2">The "detail.state" field should not match the value "initializing".<a href="#section-4.1-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.1-5.3">The "detail.c-count" field should have a numeric value greater than 0 and less than or equal to 5.<a href="#section-4.1-5.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.1-5.4">The "detail.d-count" field should have a numeric value less than 10.<a href="#section-4.1-5.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.1-5.5">The "detail.x-limit" field should not match the values 100, 200, or 300.<a href="#section-4.1-5.5" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-4.1-6">It will match following event as it matches all rules:<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-7">
+<pre>
+{
+  "time": "2017-10-02T00:00:00Z" ,
+  "detail": {
+    "state": "terminating",
+    "c-count": 5,
+    "d-count": 5,
+    "x-limit": 400
+  }
+}
+</pre><a href="#section-4.1-7" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-8">And fail to match following event as it failed to match the last rule :<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-9">
+<pre>
+{
+  "time": "2017-10-02T00:00:00Z" ,
+  "detail": {
+    "state": "terminating",
+    "c-count": 5,
+    "d-count": 5,
+    "x-limit": 200
+  }
+}
+</pre><a href="#section-4.1-9" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-10">Note, as is the case specified <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>, the behavior of pattern matching is unpredictable when the fields within a rule are not unique. <span>[<a href="#Ruler" class="cite xref">Ruler</a>]</span> implementations only respect the last name/value pair only but <span>[<a href="#Quamina" class="cite xref">Quamina</a>]</span> reports an error.<a href="#section-4.1-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="or-matching">
+<section id="section-4.2">
+        <h3 id="name-or-matching">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-or-matching" class="section-name selfRef">Or Matching</a>
+        </h3>
+<p id="section-4.2-1">Complex event patterns <span class="bcp14">MAY</span> also be used to match any of the values across multiple fields using the "$or" construct. This allows for more flexible matching conditions based on various field values.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The following example demonstrates an event pattern that matches if any of the specified conditions are met:<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-3">
+<pre>
+{
+  "detail": {
+    "$or": [
+      { "c-count": [ { "numeric": [ "&gt;", 0, "&lt;=", 5 ] } ] },
+      { "d-count": [ { "numeric": [ "&lt;", 10 ] } ] },
+      { "x-limit": [ { "numeric": [ "=", 3.018e2 ] } ] }
+    ]
+  }
+}
+</pre><a href="#section-4.2-3" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-4">In this pattern, the "$or" construct is used to check if any of the following conditions are met:<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2-5.1">The "c-count" field has a numeric value greater than 0 and less than or equal to 5.<a href="#section-4.2-5.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.2-5.2">The "d-count" field has a numeric value less than 10.<a href="#section-4.2-5.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-4.2-5.3">The "x-limit" field has a numeric value equal to 3.018e2.<a href="#section-4.2-5.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-4.2-6">Complex matching patterns with the "$or" construct provide a powerful way to create flexible matching conditions across multiple fields.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.2-7">Consider following example rule:<a href="#section-4.2-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-8">
+<pre>
+{
+  "source": [ "aws.cloudwatch" ],
+  "$or": [
+    { "metricName": [ "CPUUtilization", "ReadLatency" ] },
+    { "namespace": [ "AWS/EC2", "AWS/ES" ] }
+  ]
+}
+</pre><a href="#section-4.2-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-9">It will match following event:<a href="#section-4.2-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-10">
+<pre>
+{
+  "source": "aws.cloudwatch" ,
+  "metricName": "CPUUtilization"
+}
+</pre><a href="#section-4.2-10" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-11">and  following event :<a href="#section-4.2-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-12">
+<pre>
+{
+  "source": "aws.cloudwatch" ,
+  "metricName": "CPUUtilization"
+}
+</pre><a href="#section-4.2-12" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="matching-anything-but">
+<section id="section-4.3">
+        <h3 id="name-matching-anything-but">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-matching-anything-but" class="section-name selfRef">Matching Anything But</a>
+        </h3>
+<p id="section-4.3-1">The anything-but matching pattern allows for excluding specific values or patterns from matching. You <span class="bcp14">MAY</span> consider it logical NOT operator applied to single string or numeric values, lists of values, as a prefix, or suffix match.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">The following examples illustrate different usages of the anything-but matching rule:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.3-3">
+<pre>
+{
+  "detail": {
+    // anything-but (string)
+    "state": [{ "anything-but": "initializing" }],
+    // anything-but (number)
+    "x-limit": [{ "anything-but": 123 }],
+    // Anything-but list (strings)
+    "status": [{ "anything-but": [ "stopped", "overloaded" ]}],
+    // Anything-but list (numbers)
+    "y-limit": [{ "anything-but": [ 100, 200, 300 ]}],
+    // Anything-but prefix
+    "x-reason": [{ "anything-but": { "prefix": "init" }}],
+    // Anything-but suffix
+    "y-reason": [{ "anything-but": { "suffix": "1234" }}],
+    // Anything-but-ignore-case list (strings)
+    "error-code": [{ "anything-but": {"equals-ignore-case": "RETRY" }}]
+  }
+}
+</pre><a href="#section-4.3-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="nesting">
+<section id="section-4.4">
+        <h3 id="name-nesting">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-nesting" class="section-name selfRef">Nesting</a>
+        </h3>
+<p id="section-4.4-1">Complex matching patterns <span class="bcp14">MAY</span> be combined to further allowing for fine-grained control over event filtering and processing. This is illustrated by following example that in effect implements the logic shown as the top-level comment within the example.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-2">
+<pre>
+// Effect of ("source" &amp;&amp; ("metricName" || ("metricType &amp;&amp; "namespace" &amp;&amp; ("metricId" || "spaceId")) || "scope") || ( "status" != "initializing" )))
+{
+  "source": [ "aws.cloudwatch" ],
+  "$or": [
+    { "metricName": [ "CPUUtilization", "ReadLatency" ] },
+    {
+      "metricType": [ "MetricType" ] ,
+      "namespace": [ "AWS/EC2", "AWS/ES" ],
+      "$or" : [
+        { "metricId": [ 1234 ] },
+        { "spaceId": [ 1000 ] }
+      ]
+    },
+    { "scope": [ "Service" ] },
+    {
+        { "status": [ { "anything-but": "initializing" } ] }
+    }
+  ]
+}
+</pre><a href="#section-4.4-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="examples">
+<section id="section-5">
+      <h2 id="name-examples">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+      </h2>
+<p id="section-5-1">To better understand the practical application of standardized patterns, the following examples demonstrate their usage in different scenarios, showcasing various matchers:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="field-matching-and-path-specification-1">
+<section id="section-5.1">
+        <h3 id="name-field-matching-and-path-spec">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-field-matching-and-path-spec" class="section-name selfRef">Field Matching and Path Specification</a>
+        </h3>
+<p id="section-5.1-1">Consider the following pattern:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-2">
+<pre>
+{
+  "field1": "value1",
+  "field2": { "prefix": "abc" },
+  "field3": { "suffix": "xyz" },
+  "field4": { "exists": true },
+  "field5": { "anything-but": "value2" },
+  "field6": { "equals-ignore-case": "Value3" }
+}
+</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.1-3">This pattern matches data objects where:<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-4.1">"field1" exactly matches "value1".<a href="#section-5.1-4.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.1-4.2">"field2" starts with the prefix "abc".<a href="#section-5.1-4.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.1-4.3">"field3" ends with the suffix "xyz".<a href="#section-5.1-4.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.1-4.4">"field4" exists in the data object.<a href="#section-5.1-4.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.1-4.5">"field5" does not match the value "value2".<a href="#section-5.1-4.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.1-4.6">"field6" matches the value "Value3" regardless of case sensitivity.<a href="#section-5.1-4.6" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="numeric-matching-and-cidr-matching">
+<section id="section-5.2">
+        <h3 id="name-numeric-matching-and-cidr-m">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-numeric-matching-and-cidr-m" class="section-name selfRef">Numeric Matching and CIDR Matching</a>
+        </h3>
+<p id="section-5.2-1">The pattern below showcases numeric and CIDR matching:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-2">
+<pre>
+{
+  "field1": { "numeric": [ "&gt;", 10, "&lt;=", 20 ] },
+  "field2": { "cidr": "192.168.0.0/16" }
+}
+</pre><a href="#section-5.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2-3">This pattern matches data objects where:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-4.1">"field1" is a numeric value greater than 10 and less than or equal to 20.<a href="#section-5.2-4.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.2-4.2">"field2" is an IP address that falls within the CIDR block "192.168.0.0/16".<a href="#section-5.2-4.2" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="complex-matching-with-anything-but-and-or">
+<section id="section-5.3">
+        <h3 id="name-complex-matching-with-anyth">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-complex-matching-with-anyth" class="section-name selfRef">Complex Matching with Anything-But and $or</a>
+        </h3>
+<p id="section-5.3-1">The pattern below demonstrates complex matching using the anything-but and $or matchers:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-2">
+<pre>
+{
+  "$or": [
+    { "field1": "value1" },
+    { "field2": { "anything-but": [ "value2", "value3" ] } },
+    { "field3": { "exists": true } }
+  ]
+}
+</pre><a href="#section-5.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.3-3">This pattern matches data objects where:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-4.1">Either "field1" exactly matches "value1" OR<a href="#section-5.3-4.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.3-4.2">"field2" does not match the values "value2" or "value3" OR<a href="#section-5.3-4.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-5.3-4.3">"field3" exists in the data object.<a href="#section-5.3-4.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-5.3-5">These examples showcase the versatility of standardized patterns and the ability to express complex matching requirements using a combination of matchers. Developers <span class="bcp14">MAY</span> leverage these patterns to effectively query and filter data objects based on various criteria.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="use-cases">
+<section id="section-6">
+      <h2 id="name-7-use-cases">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-7-use-cases" class="section-name selfRef">7 Use Cases</a>
+      </h2>
+<ol start="1" type="1" class="normal type-1" id="section-6-1">
+<li id="section-6-1.1">
+          <strong>Filtering</strong>: Organizations can use patterns to filter and process events based on specific criteria. For example, an event processing system can match events that contain a specific keyword in the event description or events generated by a particular source. Log management systems can employ patterns to extract relevant lines from log files.<a href="#section-6-1.1" class="pilcrow">¶</a>
+</li>
+        <li id="section-6-1.2">
+          <strong>Stream Routing</strong>: Patterns can be used to route relevant streams of information to domain specific subsystems. For example, an eventbus can be receive all events for an e-commerce platform and then route to domain specific events to microservices that serve payment, shipping, and ordering. Also, By defining patterns that match specific sensor readings or patterns of sensor events, organizations can derive insights and trigger actions based on IoT data.<a href="#section-6-1.2" class="pilcrow">¶</a>
+</li>
+        <li id="section-6-1.3">
+          <strong>Data Validation</strong>: Patterns facilitate data validation by allowing organizations to define rules for validating incoming data. For instance, an e-commerce platform can define patterns to ensure that user-provided information, such as dates being within valid ranges. IT systems can verify ip-address being valid range.<a href="#section-6-1.3" class="pilcrow">¶</a>
+</li>
+        <li id="section-6-1.4">
+          <strong>Fraud and Anomaly Detection</strong>: Organizations can leverage patterns to detect suspicious activities and potential fraud. By combining multiple matchers, such as numeric ranges, exclusion rules, and existence checks, systems can identify abnormal patterns of transactions or behavior. Patterns that match known attack signatures, anomalous network behavior, or malicious file patterns, organizations can enhance their security posture.<a href="#section-6-1.4" class="pilcrow">¶</a>
+</li>
+        <li id="section-6-1.5">
+          <strong>Monitoring</strong>: Patterns can be used to create sophisticated monitoring systems that track and analyze data streams in real-time. Multiple streams can be monitored for governance, compliance, auditing, resource monitoring.<a href="#section-6-1.5" class="pilcrow">¶</a>
+</li>
+        <li id="section-6-1.6">
+          <strong>Geolocation-based Matching:</strong> Applications that rely on geolocation data can utilize patterns to match data based on specific geographic regions. This can be useful for regional content delivery, or compliance with local regulations.<a href="#section-6-1.6" class="pilcrow">¶</a>
+</li>
+      </ol>
+<p id="section-6-2">These use cases highlight the broad applicability of standardized patterns in diverse domains, providing a flexible and powerful toolset for data querying, filtering, and analysis.<a href="#section-6-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">Generally, there are security issues when parsing text. When designing and implementing systems that utilize pattern matching, validate and sanitize input patterns to prevent injection attacks or unintended consequences.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Patterns with complex or inefficient matching rules can potentially lead to resource exhaustion or performance degradation, and implementers should consider limiting the complexity of patterns (suc as length/depth of inputs) or enforcing timeouts to mitigate the risk of denial-of-service attacks.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">When implementing patterns for matching extended patterns that necessisate references, any security considerations listed within those document <span class="bcp14">MUST</span> be accounted for.<a href="#section-7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">This document has no IANA actions.<a href="#section-8-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-9">
+      <h2 id="name-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-9.1">
+        <h3 id="name-normative-references">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4632">[RFC4632]</dt>
+        <dd>
+<span class="refAuthor">Fuller, V.</span> and <span class="refAuthor">T. Li</span>, <span class="refTitle">"Classless Inter-domain Routing (CIDR): The Internet Address Assignment and Aggregation Plan"</span>, <span class="seriesInfo">BCP 122</span>, <span class="seriesInfo">RFC 4632</span>, <span class="seriesInfo">DOI 10.17487/RFC4632</span>, <time datetime="2006-08" class="refDate">August 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4632">https://www.rfc-editor.org/rfc/rfc4632</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8259">[RFC8259]</dt>
+      <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-9.2">
+        <h3 id="name-informative-references">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="Quamina">[Quamina]</dt>
+        <dd>
+<span class="refTitle">"Quamina"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/timbray/quamina">https://github.com/timbray/quamina</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Ruler">[Ruler]</dt>
+      <dd>
+<span class="refTitle">"Event Ruler"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/aws/event-ruler">https://github.com/aws/event-ruler</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">This document has been motivated by the <a href="https://github.com/timbray/quamina/issues/210">discussion</a> within <span>[<a href="#Quamina" class="cite xref">Quamina</a>]</span> and is based on the <a href="https://github.com/timbray/quamina/blob/main/PATTERNS.md">Patterns.md</a> file within the package. It also takes inspiration from the <a href="https://github.com/aws/event-ruler/blob/main/README.md">README</a> within <span>[<a href="#Ruler" class="cite xref">Ruler</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Someone</span></div>
+<div dir="auto" class="left"><span class="org">SomeOrg</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:some@email.com" class="email">some@email.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>

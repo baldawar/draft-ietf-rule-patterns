@@ -536,31 +536,3 @@ This document has no IANA actions.
 {:numbered="false"}
 
 This document has been motivated by the [discussion](https://github.com/timbray/quamina/issues/210) within {{Quamina}} and is based on the [Patterns.md](https://github.com/timbray/quamina/blob/main/PATTERNS.md) file within the package. It also takes inspiration from the [README](https://github.com/aws/event-ruler/blob/main/README.md) within {{Ruler}}.
-
-
-# Introduction
-
-TODO Introduction
-
-
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
-
-
-# Security Considerations
-
-TODO Security
-
-
-# IANA Considerations
-
-This document has no IANA actions.
-
-
---- back
-
-# Acknowledgments
-{:numbered="false"}
-
-TODO acknowledge.

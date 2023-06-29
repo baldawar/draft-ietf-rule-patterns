@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-05-16T00:26:45.570414+00:00",
+  "timestamp": "2023-06-29T00:34:11.309363+00:00",
   "repo": "epml-spec/draft-ietf-patterns-protocol",
   "labels": [
     {
@@ -158,6 +158,40 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOJOPpnM5UG5HB",
+      "title": "First Draft",
+      "url": "https://github.com/epml-spec/draft-ietf-patterns-protocol/pull/6",
+      "state": "OPEN",
+      "author": "baldawar",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For https://github.com/epml-spec/draft-ietf-patterns-protocol/issues/1\r\n\r\nLots to correct and edit out, but getting this out for others to offer feedback.",
+      "createdAt": "2023-06-28T06:36:19Z",
+      "updatedAt": "2023-06-28T06:46:07Z",
+      "baseRepository": "epml-spec/draft-ietf-patterns-protocol",
+      "baseRefName": "main",
+      "baseRefOid": "106e1ebe30f8827b04f48aaedd40581fb8397e6a",
+      "headRepository": "epml-spec/draft-ietf-patterns-protocol",
+      "headRefName": "baldawar-patch-1",
+      "headRefOid": "d427b8492ca9086752030308c10394f3aac70f3b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "baldawar",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Easier to read this in html or text form, so uploaded a version on my server (github doesn't allow html)\r\n* https://rishi.baldawa.com/files/draft-ietf-patterns-protocol.html\r\n* https://rishi.baldawa.com/files/draft-ietf-patterns-protocol.txt",
+          "createdAt": "2023-06-28T06:46:07Z",
+          "updatedAt": "2023-06-28T06:46:07Z"
+        }
+      ],
       "reviews": []
     }
   ]
